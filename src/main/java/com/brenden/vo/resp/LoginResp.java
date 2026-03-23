@@ -21,11 +21,11 @@ public class LoginResp implements Serializable {
 
     private String tokenValue;
 
-    private Instant issuedAt;
+    private Long issuedAt;
 
-    private Instant expiresAt;
+    private Long expiresAt;
 
-    private long expiresIn;
+    private Integer expiresIn;
 
     private String refreshToken;
 }

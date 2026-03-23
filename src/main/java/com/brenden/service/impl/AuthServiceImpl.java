@@ -60,9 +60,9 @@ public class AuthServiceImpl implements AuthService {
         LoginResp loginResp = new LoginResp();
         loginResp.setTokenValue(token);
         Instant now = Instant.now();
-        loginResp.setIssuedAt(now);
+        loginResp.setIssuedAt(now.toEpochMilli());
         loginResp.setExpiresIn(TOKEN_EXPIRES);
-        loginResp.setExpiresAt(now.plusSeconds(TOKEN_EXPIRES));
+        loginResp.setExpiresAt(now.plusSeconds(TOKEN_EXPIRES).toEpochMilli());
 
         return loginResp;
     }
