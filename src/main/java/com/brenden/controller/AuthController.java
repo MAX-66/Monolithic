@@ -1,18 +1,13 @@
 package com.brenden.controller;
 
+import com.brenden.base.ResultEntity;
 import com.brenden.service.AuthService;
 import com.brenden.vo.req.LoginReq;
 import com.brenden.vo.resp.LoginResp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 /**
  * 认证授权接口
@@ -27,8 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public LoginResp login(@RequestBody LoginReq req) {
-        return authService.login(req);
+    public ResultEntity<LoginResp> login(@RequestBody LoginReq req) throws Exception {
+        return ResultEntity.success(authService.login(req));
     }
 
 }

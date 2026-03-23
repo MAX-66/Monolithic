@@ -1,19 +1,22 @@
 package com.brenden.service.impl;
 
+import com.brenden.domain.UserDO;
 import com.brenden.service.AuthService;
+import com.brenden.service.RedisService;
 import com.brenden.vo.req.LoginReq;
 import com.brenden.vo.resp.LoginResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.UUID;
+
+import static com.brenden.constant.RedisConstant.LOGIN_TOKEN_KEY;
+import static com.brenden.constant.RedisConstant.TOKEN_EXPIRES;
 
 /**
  * 做点什么
@@ -27,10 +30,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public static final int TOKEN_EXPIRES = 1800;
+    private final RedisService redisService;
 
     @Override
-    public LoginResp login(LoginReq req) {
+    public LoginResp login(LoginReq req){
 
         if (!StringUtils.hasText(req.getUsername())) {
             return null;
@@ -43,12 +46,15 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
 
-        // 组装 token
         // 登录成功用户
-        UserDetails user = (UserDetails) authentication.getPrincipal();
+        UserDO user = (UserDO) authentication.getPrincipal();
 
         // 生成 token（推荐 UUID）
         String token = UUID.randomUUID().toString();
+
+        // 缓存 token
+//        redisService.del();
+        redisService.set(LOGIN_TOKEN_KEY + token, user, TOKEN_EXPIRES);
 
         LoginResp loginResp = new LoginResp();
         loginResp.setTokenValue(token);
