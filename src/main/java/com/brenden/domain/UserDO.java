@@ -22,6 +22,8 @@ public class UserDO implements UserDetails {
     @Serial
     private static final long serialVersionUID = 6375732715323418515L;
 
+    private String id;
+
     private String password;
 
     private String username;

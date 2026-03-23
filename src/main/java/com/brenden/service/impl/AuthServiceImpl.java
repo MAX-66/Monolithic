@@ -1,6 +1,8 @@
 package com.brenden.service.impl;
 
+import com.brenden.constant.GlobalCodeEnum;
 import com.brenden.domain.UserDO;
+import com.brenden.exception.BusinessException;
 import com.brenden.service.AuthService;
 import com.brenden.service.RedisService;
 import com.brenden.vo.req.LoginReq;
@@ -34,13 +36,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResp login(LoginReq req){
-
         if (!StringUtils.hasText(req.getUsername())) {
-            return null;
+            throw new BusinessException(GlobalCodeEnum.GC_800000.getCode(), "请输入用户名！");
         }
 
         if (!StringUtils.hasText(req.getPassword())) {
-            return null;
+            throw new BusinessException(GlobalCodeEnum.GC_800000.getCode(), "请输入密码！");
         }
 
         Authentication authentication = authenticationManager.authenticate(

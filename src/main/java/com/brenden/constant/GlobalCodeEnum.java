@@ -3,7 +3,7 @@ package com.brenden.constant;
 import lombok.Getter;
 
 /**
- * 做点什么
+ * 80：系统异常，81：业务异常
  *
  * @author lxq
  * @date 2026-03-24 02:38
@@ -14,7 +14,13 @@ public enum GlobalCodeEnum {
 
     GC_0("0", "操作成功!"),
 
-    GC_500("500", "操作失败!");
+    GC_500("500", "操作失败!"),
+
+    GC_800000("800000", "参数错误!"),
+
+    GC_800002("800002", "认证失败!"),
+
+    GC_809999("809999", "系统异常！请联系管理员");
 
 
     private final String code;
