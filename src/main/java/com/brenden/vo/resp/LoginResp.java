@@ -4,8 +4,6 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.Set;
 
 /**
  * 做点什么
@@ -28,4 +26,5 @@ public class LoginResp implements Serializable {
     private Integer expiresIn;
 
     private String refreshToken;
+
 }

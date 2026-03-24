@@ -4,36 +4,3 @@ server:
 spring:
   application:
     name: Delta-Force
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test2?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
-    hikari:
-      auto-commit: true
-      leak-detection-threshold: 20000
-      register-mbeans: true
-      pool-name: delta-hikari
-      minimum-idle: 5
-      maximum-pool-size: 20
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      validation-timeout: 5000
-      connection-test-query: SELECT 1
-
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-      password: 123456
-      database: 0
-      timeout: 3s
-
-      lettuce:
-        pool:
-          max-active: 16
-          max-idle: 8
-          min-idle: 2
-          max-wait: 1s
