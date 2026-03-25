@@ -1,5 +1,6 @@
 package com.brenden.domain;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -18,11 +19,12 @@ import java.util.List;
  * @date 2026-03-20 02:40
  */
 @Setter
+@Getter
 public class UserDO implements UserDetails {
     @Serial
     private static final long serialVersionUID = 6375732715323418515L;
 
-    private String id;
+    private Long id;
 
     private String password;
 
@@ -47,5 +49,6 @@ public class UserDO implements UserDetails {
     public String getUsername() {
         return username;
     }
+
 
 }

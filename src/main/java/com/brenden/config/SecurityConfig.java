@@ -1,5 +1,7 @@
 package com.brenden.config;
 
+import com.brenden.filter.TokenAuthenticationFilter;
+import com.brenden.service.RedisService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 做点什么
@@ -23,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, RedisService redisService) throws Exception {
 
         http
             .csrf(AbstractHttpConfigurer::disable)
@@ -35,7 +38,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
-//        http.addFilterBefore(new FakeLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new TokenAuthenticationFilter(redisService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
