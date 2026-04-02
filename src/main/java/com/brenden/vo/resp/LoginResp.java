@@ -27,4 +27,6 @@ public class LoginResp implements Serializable {
 
     private String refreshToken;
 
+    private String tokenType;
+
 }

@@ -2,6 +2,7 @@ package com.brenden.handle;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.brenden.constant.SysConstant;
+import com.brenden.util.SecurityUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +27,14 @@ public class CustomizedMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, GMT_CREATE, LocalDateTime.class, LocalDateTime.now());
         this.strictUpdateFill(metaObject, GMT_MODIFIED, LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, DEL_FLAG, () -> SysConstant.DEFAULT, Integer.class);
-//        this.strictInsertFill(metaObject, CREATE_BY, () -> UserContextHolder.getContext().getUserId(), Long.class);
-//        this.strictInsertFill(metaObject, UPDATE_BY, () -> UserContextHolder.getContext().getUserId(), Long.class);
+        Long userId = SecurityUtil.getUserId();
+        this.strictInsertFill(metaObject, CREATE_BY, () -> userId, Long.class);
+        this.strictInsertFill(metaObject, UPDATE_BY, () -> userId, Long.class);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, GMT_MODIFIED, LocalDateTime.class, LocalDateTime.now());
-//        this.strictUpdateFill(metaObject, UPDATE_BY, () -> UserContextHolder.getContext().getUserId(), Long.class);
+        this.strictUpdateFill(metaObject, UPDATE_BY, SecurityUtil::getUserId, Long.class);
     }
 }

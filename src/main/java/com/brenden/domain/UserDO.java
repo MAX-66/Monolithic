@@ -32,6 +32,18 @@ public class UserDO implements UserDetails {
 
     private List<String> roles;
 
+    private Boolean enabled;
+
+    private Boolean credentialsNonExpired;
+
+    private Boolean accountNonLocked;
+
+    private Boolean accountNonExpired;
+
+    private Long issuedAt;
+
+    private Long expiresAt;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (CollectionUtils.isEmpty(roles)) {

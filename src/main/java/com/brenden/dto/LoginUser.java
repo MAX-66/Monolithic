@@ -32,9 +32,9 @@ public class LoginUser implements Serializable {
 
     private Boolean credentialsNonExpired;
 
-    private Instant issuedAt;
+    private Long issuedAt;
 
     private Integer expiresIn;
 
-    private Instant expiresAt;
+    private Long expiresAt;
 }

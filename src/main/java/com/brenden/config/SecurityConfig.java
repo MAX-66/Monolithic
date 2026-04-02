@@ -14,6 +14,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * 做点什么
@@ -26,22 +27,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, RedisService redisService) throws Exception {
-
+    public SecurityFilterChain filterChain(HttpSecurity http, RedisService redisService, CorsFilter corsFilter) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
                         .anyRequest().authenticated()
-                );
-
-        http.addFilterBefore(new TokenAuthenticationFilter(redisService), UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(new TokenAuthenticationFilter(redisService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(corsFilter, TokenAuthenticationFilter.class);
         return http.build();
 
     }
+
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

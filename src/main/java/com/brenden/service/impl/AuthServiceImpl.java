@@ -1,6 +1,7 @@
 package com.brenden.service.impl;
 
 import com.brenden.constant.GlobalCodeEnum;
+import com.brenden.constant.SysConstant;
 import com.brenden.domain.UserDO;
 import com.brenden.dto.LoginUser;
 import com.brenden.exception.BusinessException;
@@ -70,9 +71,9 @@ public class AuthServiceImpl implements AuthService {
         loginUser.setAccountNonExpired(user.isAccountNonExpired());
         loginUser.setCredentialsNonExpired(user.isCredentialsNonExpired());
         loginUser.setAccountNonLocked(user.isAccountNonLocked());
-        loginUser.setIssuedAt(issuedAt);
+        loginUser.setIssuedAt(issuedAt.toEpochMilli());
         loginUser.setExpiresIn(TOKEN_EXPIRES);
-        loginUser.setExpiresAt(issuedAt.plusSeconds(TOKEN_EXPIRES));
+        loginUser.setExpiresAt(issuedAt.plusSeconds(TOKEN_EXPIRES).toEpochMilli());
         return loginUser;
     }
 
@@ -80,9 +81,10 @@ public class AuthServiceImpl implements AuthService {
     private LoginResp buildLoginResp(LoginUser user, String token) {
         LoginResp loginResp = new LoginResp();
         loginResp.setTokenValue(token);
-        loginResp.setIssuedAt(user.getIssuedAt().toEpochMilli());
+        loginResp.setIssuedAt(user.getIssuedAt());
         loginResp.setExpiresIn(TOKEN_EXPIRES);
-        loginResp.setExpiresAt(user.getExpiresAt().toEpochMilli());
+        loginResp.setExpiresAt(user.getExpiresAt());
+        loginResp.setTokenType(SysConstant.BEARER_TOKEN);
         return loginResp;
     }
 
