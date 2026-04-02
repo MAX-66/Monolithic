@@ -7,6 +7,7 @@ import com.brenden.dto.LoginUser;
 import com.brenden.exception.BusinessException;
 import com.brenden.service.AuthService;
 import com.brenden.service.RedisService;
+import com.brenden.util.TokenUtil;
 import com.brenden.vo.req.LoginReq;
 import com.brenden.vo.resp.LoginResp;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         UserDO user = (UserDO) authentication.getPrincipal();
 
         // 生成 token（推荐 UUID）
-        String token = UUID.randomUUID().toString();
+        String token = TokenUtil.generateSecureToken();
 
         // 缓存登录信息
         LoginUser loginUser = buildLoginUser(user, now);
@@ -94,4 +95,5 @@ public class AuthServiceImpl implements AuthService {
     private void cacheLoginUser(String token, LoginUser user) {
         redisService.set(LOGIN_TOKEN_KEY + token, user, TOKEN_EXPIRES);
     }
+
 }
