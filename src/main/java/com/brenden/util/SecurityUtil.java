@@ -1,6 +1,6 @@
 package com.brenden.util;
 
-import com.brenden.domain.UserDO;
+import com.brenden.entity.UserDO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;

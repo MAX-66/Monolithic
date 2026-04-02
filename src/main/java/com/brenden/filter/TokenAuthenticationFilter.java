@@ -3,7 +3,7 @@ package com.brenden.filter;
 import com.brenden.base.ResultEntity;
 import com.brenden.constant.GlobalCodeEnum;
 import com.brenden.constant.RedisConstant;
-import com.brenden.domain.UserDO;
+import com.brenden.entity.UserDO;
 import com.brenden.dto.LoginUser;
 import com.brenden.service.RedisService;
 import com.brenden.util.JacksonUtil;
@@ -43,7 +43,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         UserDO userDO = buildUserDO((LoginUser) userObj);
-        if (userDO.getExpiresAt() >= System.currentTimeMillis()) {
+        if (userDO.getExpiresAt() <= System.currentTimeMillis()) {
             ResponseUtil.write(response, JacksonUtil.toJson(ResultEntity.fail(GlobalCodeEnum.GC_800004)));
             return;
         }

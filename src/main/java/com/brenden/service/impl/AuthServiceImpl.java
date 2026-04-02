@@ -2,7 +2,7 @@ package com.brenden.service.impl;
 
 import com.brenden.constant.GlobalCodeEnum;
 import com.brenden.constant.SysConstant;
-import com.brenden.domain.UserDO;
+import com.brenden.entity.UserDO;
 import com.brenden.dto.LoginUser;
 import com.brenden.exception.BusinessException;
 import com.brenden.service.AuthService;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import static com.brenden.constant.RedisConstant.LOGIN_TOKEN_KEY;
 import static com.brenden.constant.RedisConstant.TOKEN_EXPIRES;

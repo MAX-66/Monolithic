@@ -1,6 +1,6 @@
 package com.brenden.service.impl;
 
-import com.brenden.domain.UserDO;
+import com.brenden.entity.UserDO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

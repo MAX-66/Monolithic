@@ -1,4 +1,4 @@
-package com.brenden.domain;
+package com.brenden.entity;
 
 import lombok.Getter;
 import lombok.Setter;
