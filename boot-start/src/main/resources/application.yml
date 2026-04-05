@@ -1,0 +1,16 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: boot-start
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.brenden.cloud.**.entity
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
