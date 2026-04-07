@@ -1,4 +1,4 @@
-package com.brenden.cloud.vo;
+package com.brenden.cloud.vo.req;
 
 import com.brenden.cloud.base.PageEntity;
 import lombok.Data;

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.brenden.cloud.entity.DictDO;
 import com.brenden.cloud.mapper.DictMapper;
 import com.brenden.cloud.service.DictService;
-import com.brenden.cloud.vo.DictPageReq;
+import com.brenden.cloud.vo.req.DictPageReq;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.brenden.cloud.base.ResultEntity;
 import com.brenden.cloud.entity.DictDO;
 import com.brenden.cloud.service.DictService;
-import com.brenden.cloud.vo.DictPageReq;
+import com.brenden.cloud.vo.req.DictPageReq;
 import com.brenden.cloud.vo.resp.DictPageResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

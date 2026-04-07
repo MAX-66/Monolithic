@@ -6,12 +6,11 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 做点什么
+ * 登录响应
  *
  * @author lxq
  * @date 2026-03-20 08:25
  */
-
 @Data
 public class LoginResp implements Serializable {
     @Serial
@@ -26,6 +25,10 @@ public class LoginResp implements Serializable {
     private Integer expiresIn;
 
     private String refreshToken;
+
+    private Long refreshExpiresAt;
+
+    private Integer refreshExpiresIn;
 
     private String tokenType;
 

@@ -3,7 +3,7 @@ package com.brenden.cloud.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.brenden.cloud.entity.DictDO;
-import com.brenden.cloud.vo.DictPageReq;
+import com.brenden.cloud.vo.req.DictPageReq;
 
 
 /**

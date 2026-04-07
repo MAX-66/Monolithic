@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * 填充 Authentication
+ * Token 认证过滤器
  *
  * @author lxq
  * @date 2026-03-19 09:23
@@ -32,6 +32,8 @@ import java.util.Objects;
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final RedisService redisService;
+
+    private static final long TOKEN_REFRESH_THRESHOLD = 300;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,11 +44,21 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             ServletUtil.write(response, JacksonUtil.toJson(ResultEntity.fail(GlobalCodeEnum.GC_800004)));
             return;
         }
-        UserDO userDO = buildUserDO((LoginUser) userObj);
+        
+        LoginUser loginUser = (LoginUser) userObj;
+        UserDO userDO = buildUserDO(loginUser);
+        
         if (userDO.getExpiresAt() <= System.currentTimeMillis()) {
             ServletUtil.write(response, JacksonUtil.toJson(ResultEntity.fail(GlobalCodeEnum.GC_800004)));
             return;
         }
+        
+        long remainingTime = (userDO.getExpiresAt() - System.currentTimeMillis()) / 1000;
+        if (remainingTime < TOKEN_REFRESH_THRESHOLD) {
+            response.setHeader("X-Token-Expiring-Soon", "true");
+            response.setHeader("X-Token-Remaining-Seconds", String.valueOf(remainingTime));
+        }
+        
         Authentication auth = new UsernamePasswordAuthenticationToken(userDO, null, userDO.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);
@@ -71,7 +83,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return "/auth/login".equals(uri);
+        return "/auth/login".equals(uri) || "/auth/refresh".equals(uri);
     }
 
 }

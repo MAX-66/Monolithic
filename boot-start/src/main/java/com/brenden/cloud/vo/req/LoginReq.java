@@ -1,4 +1,4 @@
-package com.brenden.cloud.vo;
+package com.brenden.cloud.vo.req;
 
 import lombok.Data;
 
