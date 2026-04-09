@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class UserDO implements UserDetails {
+public class UserEntity implements UserDetails {
     @Serial
     private static final long serialVersionUID = 6375732715323418515L;
 

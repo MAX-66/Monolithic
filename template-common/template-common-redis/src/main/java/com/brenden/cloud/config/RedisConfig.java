@@ -3,8 +3,10 @@ package com.brenden.cloud.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -36,15 +38,15 @@ public class RedisConfig {
     }
 
     private Jackson2JsonRedisSerializer<Object> getJsonRedisSerializer() {
-        // Json序列化配置
         ObjectMapper om = new ObjectMapper();
-        // 序列化所有字段
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY);
-        // 序列化对象中的对象
         om.activateDefaultTyping(om.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY);
+
+        om.registerModule(new JavaTimeModule());
+        om.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
 
         return new Jackson2JsonRedisSerializer<>(om, Object.class);
     }

@@ -3,10 +3,11 @@ package com.brenden.cloud.service.impl;
 import com.brenden.cloud.constant.GlobalCodeEnum;
 import com.brenden.cloud.constant.SysConstant;
 import com.brenden.cloud.entity.LoginUser;
-import com.brenden.cloud.entity.UserDO;
+import com.brenden.cloud.entity.UserEntity;
 import com.brenden.cloud.exception.BusinessException;
 import com.brenden.cloud.service.AuthService;
 import com.brenden.cloud.service.RedisService;
+import com.brenden.cloud.service.UserService;
 import com.brenden.cloud.utils.TokenUtil;
 import com.brenden.cloud.vo.req.LoginReq;
 import com.brenden.cloud.vo.resp.LoginResp;
@@ -39,6 +40,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final RedisService redisService;
 
+    private final UserService userService;
+
     @Override
     @SneakyThrows
     public LoginResp login(LoginReq req){
@@ -54,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
         Instant now = Instant.now();
         // 登录成功用户
-        UserDO user = (UserDO) authentication.getPrincipal();
+        UserEntity user = (UserEntity) authentication.getPrincipal();
 
         // 生成 Access Token 和 Refresh Token
         String accessToken = TokenUtil.generateSecureToken();
@@ -83,11 +86,11 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(GlobalCodeEnum.GC_800004.getCode(), "刷新令牌已过期，请重新登录！");
         }
 
-        Long userId = (Long) userIdObj;
+        Long userId = convertToLong(userIdObj);
 
         // 这里应该从数据库查询完整的用户信息
         // 暂时使用硬编码的方式，实际项目中需要注入 UserService
-        UserDO user = getUserById(userId);
+        UserEntity user = userService.getUserRoleById(userId);
         if (Objects.isNull(user)) {
             throw new BusinessException(GlobalCodeEnum.GC_800002.getCode(), "用户不存在！");
         }
@@ -110,27 +113,7 @@ public class AuthServiceImpl implements AuthService {
         return buildLoginResp(loginUser, newAccessToken, newRefreshToken, now);
     }
 
-    /**
-     * 根据用户 ID 获取用户信息
-     * TODO: 实际项目中应该从数据库查询
-     */
-    private UserDO getUserById(Long userId) {
-        UserDO userDO = new UserDO();
-        userDO.setId(userId);
-        userDO.setUsername("admin");
-        userDO.setPassword("{noop}123456");
-        userDO.setEnabled(true);
-        userDO.setAccountNonExpired(true);
-        userDO.setAccountNonLocked(true);
-        userDO.setCredentialsNonExpired(true);
-        java.util.List<String> roles = new java.util.ArrayList<>();
-        roles.add("ROLE_ADMIN");
-        roles.add("ROLE_USER");
-        userDO.setRoles(roles);
-        return userDO;
-    }
-
-    private LoginUser buildLoginUser(UserDO user, Instant issuedAt) {
+    private LoginUser buildLoginUser(UserEntity user, Instant issuedAt) {
         LoginUser loginUser = new LoginUser();
         loginUser.setId(user.getId());
         loginUser.setUsername(user.getUsername());
@@ -176,6 +159,26 @@ public class AuthServiceImpl implements AuthService {
      */
     private void cacheRefreshToken(String refreshToken, Long userId) {
         redisService.set(REFRESH_TOKEN_KEY + refreshToken, userId, REFRESH_TOKEN_EXPIRES);
+    }
+
+    private Long convertToLong(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof Long) {
+            return (Long) obj;
+        }
+        if (obj instanceof Integer) {
+            return ((Integer) obj).longValue();
+        }
+        if (obj instanceof Number) {
+            return ((Number) obj).longValue();
+        }
+        try {
+            return Long.parseLong(obj.toString());
+        } catch (NumberFormatException e) {
+            throw new BusinessException(GlobalCodeEnum.GC_800000.getCode(), "用户ID格式错误");
+        }
     }
 
 }

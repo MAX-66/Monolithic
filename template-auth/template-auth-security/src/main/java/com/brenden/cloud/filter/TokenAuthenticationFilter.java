@@ -5,7 +5,7 @@ import com.brenden.cloud.base.ResultEntity;
 import com.brenden.cloud.constant.GlobalCodeEnum;
 import com.brenden.cloud.constant.RedisConstant;
 import com.brenden.cloud.entity.LoginUser;
-import com.brenden.cloud.entity.UserDO;
+import com.brenden.cloud.entity.UserEntity;
 import com.brenden.cloud.service.RedisService;
 import com.brenden.cloud.utils.JacksonUtil;
 import com.brenden.cloud.utils.ServletUtil;
@@ -46,7 +46,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
         
         LoginUser loginUser = (LoginUser) userObj;
-        UserDO userDO = buildUserDO(loginUser);
+        UserEntity userDO = buildUserDO(loginUser);
         
         if (userDO.getExpiresAt() <= System.currentTimeMillis()) {
             ServletUtil.write(response, JacksonUtil.toJson(ResultEntity.fail(GlobalCodeEnum.GC_800004)));
@@ -65,8 +65,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    private UserDO buildUserDO(LoginUser user) {
-        UserDO userDO = new UserDO();
+    private UserEntity buildUserDO(LoginUser user) {
+        UserEntity userDO = new UserEntity();
         userDO.setId(user.getId());
         userDO.setUsername(user.getUsername());
         userDO.setRoles(user.getRoles());

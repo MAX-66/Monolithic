@@ -27,16 +27,14 @@ public class AuthExceptionHandler {
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResultEntity<?> handleAuthException(AuthenticationException e) {
-        if (e instanceof BadCredentialsException) {
-            return ResultEntity.fail(GlobalCodeEnum.GC_800002.getCode(), "用户名或密码错误");
-        } else if (e instanceof UsernameNotFoundException) {
+        if (e instanceof UsernameNotFoundException) {
             return ResultEntity.fail(GlobalCodeEnum.GC_800002.getCode(), "用户名不存在");
         } else if (e instanceof LockedException) {
             return ResultEntity.fail(GlobalCodeEnum.GC_800002.getCode(), "账号被锁定");
         } else if (e instanceof DisabledException) {
             return ResultEntity.fail(GlobalCodeEnum.GC_800002.getCode(), "账号已禁用");
         }
-        return ResultEntity.fail(GlobalCodeEnum.GC_800002);
+        return ResultEntity.fail(GlobalCodeEnum.GC_800002.getCode(), "用户名或密码错误");
     }
 
 }

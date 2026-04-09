@@ -1,6 +1,6 @@
 package com.brenden.cloud.utils;
 
-import com.brenden.cloud.entity.UserDO;
+import com.brenden.cloud.entity.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
@@ -16,15 +16,15 @@ import java.util.Optional;
 public final class SecurityUtil {
 
     public static Long getUserId() {
-        return getUserDO().map(UserDO::getId).orElse(0L);
+        return getUserDO().map(UserEntity::getId).orElse(0L);
     }
 
-    public static Optional<UserDO> getUserDO() {
+    public static Optional<UserEntity> getUserDO() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (ObjectUtils.isEmpty(authentication)) {
             return Optional.empty();
         }
-        return Optional.of((UserDO) authentication.getPrincipal());
+        return Optional.of((UserEntity) authentication.getPrincipal());
     }
 
 }
