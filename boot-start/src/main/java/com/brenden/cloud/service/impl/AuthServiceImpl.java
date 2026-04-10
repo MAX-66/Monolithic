@@ -63,9 +63,6 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = TokenUtil.generateSecureToken();
         String refreshToken = TokenUtil.generateSecureToken();
 
-        // 计算过期时间
-        Instant refreshExpiresAt = now.plusSeconds(REFRESH_TOKEN_EXPIRES);
-
         // 缓存登录信息
         LoginUser loginUser = buildLoginUser(user, now);
         cacheAccessToken(accessToken, loginUser);
@@ -97,7 +94,6 @@ public class AuthServiceImpl implements AuthService {
 
         Instant now = Instant.now();
 
-
         // 生成新的 Token
         String newAccessToken = TokenUtil.generateSecureToken();
         String newRefreshToken = TokenUtil.generateSecureToken();
@@ -111,6 +107,12 @@ public class AuthServiceImpl implements AuthService {
         redisService.del(REFRESH_TOKEN_KEY + refreshToken);
 
         return buildLoginResp(loginUser, newAccessToken, newRefreshToken, now);
+    }
+
+    @Override
+    public Boolean logout(String token) {
+        redisService.del(LOGIN_TOKEN_KEY + token);
+        return Boolean.TRUE;
     }
 
     private LoginUser buildLoginUser(UserEntity user, Instant issuedAt) {
@@ -161,6 +163,17 @@ public class AuthServiceImpl implements AuthService {
         redisService.set(REFRESH_TOKEN_KEY + refreshToken, userId, REFRESH_TOKEN_EXPIRES);
     }
 
+    /**
+     * 将对象安全转换为 Long 类型
+     * <p>
+     * 支持多种数值类型的转换，包括 Long、Integer 及其他 Number 子类。
+     * 如果对象是字符串类型，则尝试解析为 Long。
+     * </p>
+     *
+     * @param obj 待转换的对象，可能为 Long、Integer、其他 Number 类型或可解析为数字的字符串
+     * @return 转换后的 Long 值，如果输入为 null 则返回 null
+     * @throws BusinessException 当对象无法转换为有效的 Long 类型时抛出业务异常
+     */
     private Long convertToLong(Object obj) {
         if (obj == null) {
             return null;

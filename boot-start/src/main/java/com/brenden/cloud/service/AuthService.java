@@ -25,4 +25,9 @@ public interface AuthService {
      */
     LoginResp refreshToken(String refreshToken);
 
+    /**
+     * 登出
+     */
+    Boolean logout(String token);
+
 }
